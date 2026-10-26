@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MateLink · Tutores de tu materia</title>
+<!--
+  CONFIGURACIÓN (puerta falsa, H7)
+  Para medir resultados, pegá acá el link de un Google Form propio:
+  1) Creá un Google Form con 5 preguntas de respuesta corta: Evento, Plan, Correo, Materia, Fecha.
+  2) Menú ⋮ > "Obtener enlace previamente rellenado": completá las 5, copiá el link y mirá los números entry.XXXX.
+  3) Cambiá "viewform" por "formResponse" en la URL base y pegala en FORM_URL; poné los entry.XXXX en ENTRY.
+  Sin esto la página funciona igual (demo), pero NO guarda ningún dato.
+-->
+<script>
+const CONFIG = {
+  FORM_URL: "",   // ej: "https://docs.google.com/forms/d/e/XXXX/formResponse"
+  ENTRY: { evento:"", plan:"", correo:"", materia:"", fecha:"" } // ej: "entry.123456789"
+};
+</script>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d2330;--muted:#5b6475;--line:#e2e0d8;--brand:#1f6f5c;--soft:#dff0ea;--acc:#d98c2b}
+@media (prefers-color-scheme:dark){:root{--bg:#14171d;--card:#1c2029;--ink:#eceef3;--muted:#9aa3b5;--line:#2c3240;--brand:#59c2a5;--soft:#17332c;--acc:#f2c25b}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:960px;margin:0 auto;padding:0 16px}
+nav{padding:18px 0;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:22px;color:var(--brand);letter-spacing:-.02em}
+.hero{padding:40px 0 28px;text-align:center}
+.hero h1{font-size:clamp(30px,6vw,50px);line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
+.hero p{color:var(--muted);font-size:clamp(17px,2.6vw,21px);max-width:680px;margin:0 auto 24px}
+.btn{display:inline-block;background:var(--brand);color:#fff;border:0;border-radius:12px;padding:14px 26px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.08)}
+.steps{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:30px 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.step .n{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--brand);font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.step b{display:block;margin-bottom:2px}.step span{color:var(--muted);font-size:15px}
+h2{text-align:center;font-size:clamp(24px,4vw,32px);margin:36px 0 18px}
+.plans{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.plan{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:24px;text-align:center}
+.plan.hi{border-color:var(--brand)}
+.plan h3{font-size:20px}.plan .pr{font-size:42px;font-weight:800;color:var(--brand);margin:6px 0}
+.plan .pr small{font-size:16px;color:var(--muted);font-weight:400}
+.plan ul{list-style:none;padding:0;margin:10px 0 18px;color:var(--muted);font-size:15.5px}
+.plan li{padding:4px 0}.plan li::before{content:"✔ ";color:var(--brand)}
+.mini{font-size:13.5px;color:var(--muted);text-align:center;margin-top:10px}
+footer{padding:36px 0 48px;text-align:center;color:var(--muted);font-size:14px}
+dialog{border:0;border-radius:16px;padding:0;max-width:460px;width:calc(100% - 32px);background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog{margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dlg{padding:26px}
+.dlg h3{font-size:22px;margin-bottom:4px}
+.dlg p{color:var(--muted);font-size:15px;margin-bottom:14px}
+label{display:block;font-size:14px;font-weight:700;margin:12px 0 4px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--bg);color:var(--ink)}
+.x{float:right;background:none;border:0;font-size:26px;cursor:pointer;color:var(--muted)}
+.ty{text-align:center}.ty .ok{font-size:46px}
+.note{background:#fff6dc;color:#4a3a00;border-radius:10px;padding:12px 14px;font-size:15px;margin-top:14px}
+@media (prefers-color-scheme:dark){.note{background:#3a3213;color:#f4e6b0}}
+</style></head>
+<body>
+<div class="w">
+<nav><div class="logo">MateLink</div><span class="mini" style="margin:0">Proyecto de estudiantes de la UCU</span></nav>
+
+<section class="hero">
+  <h1>¿Tenés parcial?<br>MateLink te conecta con un tutor de tu materia.</h1>
+  <p>Matching automático según materia y fecha de evaluación, dentro de Discord o WhatsApp. Pago simple, sin negociar.</p>
+  <button class="btn" data-plan="Hero">Reservar tutoría</button>
+</section>
+
+<section class="steps">
+  <div class="step"><div class="n">1</div><b>Contanos qué materia y cuándo rendís</b><span>Dos datos, menos de un minuto.</span></div>
+  <div class="step"><div class="n">2</div><b>Te proponemos un tutor</b><span>Alguien que ya aprobó esa materia y está verificado.</span></div>
+  <div class="step"><div class="n">3</div><b>Estudian y pagás en un paso</b><span>Sin coordinar por chat ni negociar precio.</span></div>
+</section>
+
+<h2>Elegí cómo estudiar</h2>
+<section class="plans">
+  <div class="plan hi">
+    <h3>Sesión individual</h3>
+    <div class="pr">$U 500 <small>/ 60 min</small></div>
+    <ul><li>Tutor verificado de tu materia</li><li>Enfocada en tus dudas</li><li>Online o en el campus</li></ul>
+    <button class="btn" data-plan="Individual $U 500">Reservar tutoría</button>
+  </div>
+  <div class="plan">
+    <h3>Sesión grupal</h3>
+    <div class="pr">$U 200 <small>/ persona</small></div>
+    <ul><li>Grupo armado y moderado</li><li>Tutor verificado de tu materia</li><li>Ideal para repasar antes del parcial</li></ul>
+    <button class="btn" data-plan="Grupal $U 200">Reservar tutoría</button>
+  </div>
+</section>
+<p class="mini">Precios de referencia, sujetos a confirmación.</p>
+</div>
+
+<footer>MateLink · prototipo de un trabajo académico de la Universidad Católica del Uruguay</footer>
+
+<dialog id="d"><div class="dlg" id="box"></div></dialog>
+
+<script>
+const d=document.getElementById('d'), box=document.getElementById('box');
+let plan='';
+function send(extra){
+  const C=CONFIG; const data={evento:extra.evento,plan:plan,correo:extra.correo||'',materia:extra.materia||'',fecha:extra.fecha||''};
+  console.log('registro',data);
+  if(!C.FORM_URL) return;
+  const fd=new FormData();
+  for(const k in data){ if(C.ENTRY[k]) fd.append(C.ENTRY[k],data[k]); }
+  try{ fetch(C.FORM_URL,{method:'POST',mode:'no-cors',body:fd}); }catch(e){}
+}
+function formView(){
+  box.innerHTML=`<button class="x" onclick="d.close()" aria-label="Cerrar">×</button>
+  <h3>Reservá tu tutoría</h3><p>Plan elegido: <b>${plan}</b>. Dejanos estos datos para asignarte un tutor.</p>
+  <form id="f">
+    <label>Correo</label><input type="email" name="correo" required placeholder="nombre@correo.com">
+    <label>Materia</label><input name="materia" required placeholder="Ej.: Contabilidad I">
+    <label>Fecha de tu evaluación</label><input type="date" name="fecha" required>
+    <button class="btn" style="width:100%;margin-top:18px" type="submit">Enviar</button>
+  </form>`;
+  document.getElementById('f').addEventListener('submit',e=>{
+    e.preventDefault(); const f=new FormData(e.target);
+    send({evento:'Dejó datos',correo:f.get('correo'),materia:f.get('materia'),fecha:f.get('fecha')});
+    thanks();
+  });
+}
+function thanks(){
+  box.innerHTML=`<button class="x" onclick="d.close()" aria-label="Cerrar">×</button><div class="ty"><div class="ok">🙌</div>
+  <h3>¡Gracias!</h3><p style="margin-top:8px">Todavía estamos abriendo cupos: dejaste tus datos y te avisamos cuando haya un tutor disponible para tu materia.</p>
+  <div class="note"><b>No se realizó ningún cobro.</b> Esta página es un prototipo de un trabajo académico y el servicio aún no está disponible.</div></div>`;
+}
+document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{
+  plan=b.dataset.plan; send({evento:'Clic en Reservar'}); formView(); d.showModal();
+}));
+</script>
+</body></html>
